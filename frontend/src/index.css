@@ -1,0 +1,139 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  margin: 0;
+  background-color: #f8fafc;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+}
+
+
+/* --- LINE 5 SE NEECHE ADD KAREIN --- */
+
+/* 1. Default Light Theme Variables */
+:root {
+  --bg-primary: #f8fafc;
+  --bg-card: #ffffff;
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --border-color: #e2e8f0;
+}
+
+/* 2. Dark Theme Variables */
+.dark {
+  --bg-primary: #070b14;
+  --bg-card: #0e1626;
+  --text-primary: #f8fafc;
+  --text-secondary: #94a3b8;
+  --border-color: #1e293b;
+}
+
+/* 3. Updated Body Style */
+body {
+  margin: 0;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* 4. Glassmorphic Cards Adjustments */
+.dark .light-card {
+  background: rgba(14, 22, 38, 0.85) !important;
+  border: 1px solid rgba(99, 102, 241, 0.3) !important;
+  box-shadow: 0 0 25px rgba(0, 0, 0, 0.5) !important;
+}
+/* ==========================================
+   CAMPUSSETU - GLOWING LIGHT EFFECTS
+   ========================================== */
+
+/* 1. Glassmorphism Card with Neon Light Glow */
+.light-card {
+  background: rgba(255, 255, 255, 0.9) !important;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(99, 102, 241, 0.2) !important;
+  box-shadow: 0 0 25px rgba(99, 102, 241, 0.2) !important;
+  border-radius: 16px !important;
+  transition: all 0.3s ease-in-out !important;
+}
+
+.light-card:hover {
+  box-shadow: 0 0 45px rgba(99, 102, 241, 0.45) !important;
+  border-color: rgba(99, 102, 241, 0.5) !important;
+  transform: translateY(-3px);
+}
+
+/* 2. Input Fields Light Glow on Focus */
+.glow-input, 
+input[type="text"], 
+input[type="email"], 
+input[type="password"], 
+select {
+  transition: all 0.3s ease-in-out !important;
+  border-radius: 8px !important;
+}
+
+.glow-input:focus, 
+input[type="text"]:focus, 
+input[type="email"]:focus, 
+input[type="password"]:focus, 
+select:focus {
+  outline: none !important;
+  border-color: #6366f1 !important;
+  box-shadow: 0 0 15px rgba(99, 102, 241, 0.5) !important;
+}
+
+/* 3. Glowing Light Button */
+.glow-btn, 
+button[type="submit"] {
+  background: linear-gradient(135deg, #6366f1, #4f46e5) !important;
+  color: #ffffff !important;
+  border: none !important;
+  border-radius: 8px !important;
+  box-shadow: 0 0 15px rgba(99, 102, 241, 0.4) !important;
+  transition: all 0.3s ease-in-out !important;
+  font-weight: 600 !important;
+}
+
+.glow-btn:hover, 
+button[type="submit"]:hover {
+  box-shadow: 0 0 25px rgba(99, 102, 241, 0.8) !important;
+  transform: translateY(-2px);
+  background: linear-gradient(135deg, #4f46e5, #4338ca) !important;
+}
+
+/* 4. Ambient Background Glowing Orbs (Optional for Page Container) */
+.ambient-glow-bg {
+  position: relative;
+  overflow: hidden;
+  background-color: #0f172a;
+  min-height: 100vh;
+}
+
+.ambient-glow-bg::before {
+  content: '';
+  position: absolute;
+  top: -100px;
+  left: -100px;
+  width: 350px;
+  height: 350px;
+  background: rgba(99, 102, 241, 0.35);
+  border-radius: 50%;
+  filter: blur(120px);
+  pointer-events: none;
+}
+
+.ambient-glow-bg::after {
+  content: '';
+  position: absolute;
+  bottom: -100px;
+  right: -100px;
+  width: 350px;
+  height: 350px;
+  background: rgba(20, 184, 166, 0.3);
+  border-radius: 50%;
+  filter: blur(120px);
+  pointer-events: none;
+}
