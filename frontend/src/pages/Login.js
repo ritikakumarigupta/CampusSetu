@@ -12,7 +12,7 @@ const Login = () => {
   
 const handleSubmit = (e) => {
   e.preventDefault();
-  API.post('/auth/login', formData)
+  API.post('/api/auth/login', formData)
     .then((res) => {
       const { token, user } = res.data;
       

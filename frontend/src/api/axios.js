@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const API = axios.create({
-  baseURL: 'https://campussetu-fk70.onrender.com', // 👈 Render ka backend URL
+  baseURL: 'https://campussetu-fk70.onrender.com', 
 });
 
 API.interceptors.request.use((config) => {
