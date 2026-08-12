@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import API from '../api/axios';
-import { Shield } from 'lucide-react';
 
 const Register = () => {
   const [formData, setFormData] = useState({ name: '', email: '', password: '', role: 'Student' });
@@ -35,10 +34,13 @@ const Register = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-slate-100 px-4">
-      <div className="max-w-md w-full bg-white rounded-2xl p-8 shadow-xl space-y-6">
+      <div className="max-w-md w-full bg-white border border-slate-200 rounded-2xl p-8 shadow-xl space-y-6">
+        
+        {/* Header (Logo & Subtitle Removed) */}
         <div className="text-center space-y-2">
-          <Shield className="w-12 h-12 text-sky-500 mx-auto" />
-          <h1 className="text-2xl font-extrabold text-slate-900">Create Account</h1>
+          <h1 className="text-2xl font-extrabold text-slate-900">
+            Create Account
+          </h1>
         </div>
 
         {error && (
@@ -56,7 +58,7 @@ const Register = () => {
               placeholder="John Doe"
               value={formData.name}
               onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-              className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-300 text-sm"
+              className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-sky-500"
             />
           </div>
 
@@ -68,7 +70,7 @@ const Register = () => {
               placeholder="name@gmail.com"
               value={formData.email}
               onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-              className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-300 text-sm"
+              className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-sky-500"
             />
           </div>
 
@@ -80,21 +82,24 @@ const Register = () => {
               placeholder="••••••••"
               value={formData.password}
               onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-              className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-300 text-sm"
+              className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-sky-500"
             />
           </div>
 
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2.5 rounded-xl transition text-sm"
+            className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2.5 rounded-xl transition shadow-md text-sm mt-2"
           >
-            {loading ? 'Registering...' : 'Sign Up'}
+            {loading ? 'Signing Up...' : 'Sign Up'}
           </button>
         </form>
 
         <p className="text-xs text-center text-slate-500 pt-2">
-          Already have an account? <Link to="/login" className="text-sky-600 font-semibold hover:underline">Login Here</Link>
+          Already have an account?{' '}
+          <Link to="/login" className="text-sky-600 font-semibold hover:underline">
+            Login Here
+          </Link>
         </p>
       </div>
     </div>

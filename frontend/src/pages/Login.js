@@ -1,48 +1,48 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import API from '../api/axios';
-import { Shield, Eye, EyeOff } from 'lucide-react';
+import { Eye, EyeOff } from 'lucide-react';
 
 const Login = () => {
   const [formData, setFormData] = useState({ email: '', password: '' });
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  
-const handleSubmit = (e) => {
-  e.preventDefault();
-  API.post('/api/auth/login', formData)
-    .then((res) => {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError('');
+    setLoading(true);
+
+    try {
+      const res = await API.post('/api/auth/login', formData);
       const { token, user } = res.data;
       
       localStorage.setItem('token', token);
       localStorage.setItem('user', JSON.stringify(user));
 
-      // --- ROLE CHECK FOR ADMIN ROUTE ---
       if (user.role === 'Admin') {
-        navigate('/admin/dashboard'); // Admin ke dashboard route par redirect
+        navigate('/admin/dashboard');
       } else {
-        navigate('/dashboard'); // Student ke dashboard route par redirect
+        navigate('/dashboard');
       }
-    })
-    .catch((err) => {
+    } catch (err) {
       setError(err.response?.data?.message || 'Invalid Credentials');
-    });
-};
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
-    <div className="min-h-screen flex items-center justify-center bg-slate-100  px-4">
-      <div className="max-w-md w-full bg-white   border-slate-900 dark:border-slate-800 rounded-2xl p-8 shadow-xl space-y-6">
+    <div className="min-h-screen flex items-center justify-center bg-slate-100 px-4">
+      <div className="max-w-md w-full bg-white border border-slate-200 rounded-2xl p-8 shadow-xl space-y-6">
         
-        {/* Logo & Header */}
+        {/* Header (Logo & Subtitle Removed) */}
         <div className="text-center space-y-2">
-          <Shield className="w-12 h-12 text-sky-500 mx-auto" />
           <h1 className="text-2xl font-extrabold text-slate-900 dark:text-white">
             CampusSetu Portal
           </h1>
-          <p className="text-xs text-slate-500 dark:text-slate-400">
-            Smart Campus Management System
-          </p>
         </div>
 
         {error && (
@@ -69,7 +69,7 @@ const handleSubmit = (e) => {
 
           {/* Password Field with Eye Icon Toggle */}
           <div>
-            <label className="block text-xs font-semibold text-slate-700  mb-1">
+            <label className="block text-xs font-semibold text-slate-700 mb-1">
               Password
             </label>
             <div className="relative">
@@ -98,9 +98,10 @@ const handleSubmit = (e) => {
           {/* Submit Button */}
           <button
             type="submit"
+            disabled={loading}
             className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2.5 rounded-xl transition shadow-md text-sm mt-2"
           >
-            Sign In
+            {loading ? 'Signing In...' : 'Sign In'}
           </button>
         </form>
 
