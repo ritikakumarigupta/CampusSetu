@@ -1,22 +1,25 @@
 const express = require('express');
 const router = express.Router();
-const { verifyAdmin, verifyToken } = require('../middleware/authMiddleware');
-const {
-  getDashboardStats,
-  getAllComplaints,
-  updateComplaint,
-  getAllBookings,
-  updateBookingStatus,
-  createAnnouncement,
-  getAnnouncements
-} = require('../controllers/adminController');
+const Complaint = require('../models/Complaint');
+const User = require('../models/User');
 
-router.get('/stats', verifyAdmin, getDashboardStats);
-router.get('/complaints', verifyAdmin, getAllComplaints);
-router.put('/complaints/:id', verifyAdmin, updateComplaint);
-router.get('/bookings', verifyAdmin, getAllBookings);
-router.put('/bookings/:id', verifyAdmin, updateBookingStatus);
-router.post('/announcement', verifyAdmin, createAnnouncement);
-router.get('/announcements', verifyToken, getAnnouncements);
+// GET Admin Overview Statistics
+router.get('/stats', async (req, res) => {
+  try {
+    const totalUsers = await User.countDocuments();
+    const totalComplaints = await Complaint.countDocuments();
+    const pendingComplaints = await Complaint.countDocuments({ status: 'Pending' });
+    const resolvedComplaints = await Complaint.countDocuments({ status: 'Resolved' });
+
+    res.json({
+      totalUsers,
+      totalComplaints,
+      pendingComplaints,
+      resolvedComplaints
+    });
+  } catch (err) {
+    res.status(500).json({ message: 'Error fetching stats: ' + err.message });
+  }
+});
 
 module.exports = router;

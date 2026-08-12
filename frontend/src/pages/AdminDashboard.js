@@ -1,74 +1,48 @@
 import React, { useEffect, useState } from 'react';
 import API from '../api/axios';
-import { Chart as ChartJS, ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarElement } from 'chart.js';
-import { Pie, Bar } from 'react-chartjs-2';
-
-ChartJS.register(ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarElement);
 
 const AdminDashboard = () => {
-  const [stats, setStats] = useState(null);
+  const [stats, setStats] = useState({
+    totalUsers: 0,
+    totalComplaints: 0,
+    pendingComplaints: 0,
+    resolvedComplaints: 0
+  });
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    API.get('/admin/stats')
-      .then(res => setStats(res.data))
-      .catch(err => console.error(err));
+    API.get('/api/admin/stats')
+      .then((res) => {
+        setStats(res.data);
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.error("Admin stats error:", err);
+        setLoading(false);
+      });
   }, []);
 
-  if (!stats) return <div className="p-8 text-center">Loading Analytics Dashboard...</div>;
-
-  const pieData = {
-    labels: ['Pending', 'In-Progress', 'Resolved'],
-    datasets: [{
-      data: [stats.pendingComplaints, stats.inProgressComplaints, stats.resolvedComplaints],
-      backgroundColor: ['#ef4444', '#f59e0b', '#10b981']
-    }]
-  };
-
-  const barData = {
-    labels: ['Total Complaints', 'Total Bookings', 'Registered Students'],
-    datasets: [{
-      label: 'Campus Management Metrics',
-      data: [stats.totalComplaints, stats.totalBookings, stats.totalStudents],
-      backgroundColor: '#0284c7'
-    }]
-  };
+  if (loading) return <div className="p-6 text-center">Loading Admin Overview...</div>;
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-8 space-y-8">
-      <h1 className="text-3xl font-extrabold text-slate-300">Admin Analytics Overview</h1>
-
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        <div className="bg-white p-6 rounded-xl shadow border">
-          <p className="text-sm text-slate-500 font-semibold">Total Complaints</p>
-          <p className="text-3xl font-extrabold text-slate-900 mt-2">{stats.totalComplaints}</p>
+    <div className="p-6 space-y-6">
+      <h1 className="text-2xl font-bold">Admin Overview</h1>
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <div className="bg-white p-4 rounded-xl shadow border">
+          <p className="text-xs text-gray-500">Total Users</p>
+          <p className="text-2xl font-bold">{stats.totalUsers}</p>
         </div>
-        <div className="bg-white p-6 rounded-xl shadow border">
-          <p className="text-sm text-slate-500 font-semibold">Pending Issues</p>
-          <p className="text-3xl font-extrabold text-red-600 mt-2">{stats.pendingComplaints}</p>
+        <div className="bg-white p-4 rounded-xl shadow border">
+          <p className="text-xs text-gray-500">Total Complaints</p>
+          <p className="text-2xl font-bold">{stats.totalComplaints}</p>
         </div>
-        <div className="bg-white p-6 rounded-xl shadow border">
-          <p className="text-sm text-slate-500 font-semibold">Pending Bookings</p>
-          <p className="text-3xl font-extrabold text-amber-600 mt-2">{stats.pendingBookings}</p>
+        <div className="bg-white p-4 rounded-xl shadow border">
+          <p className="text-xs text-yellow-600">Pending</p>
+          <p className="text-2xl font-bold">{stats.pendingComplaints}</p>
         </div>
-        <div className="bg-white p-6 rounded-xl shadow border">
-          <p className="text-sm text-slate-500 font-semibold">Active Students</p>
-          <p className="text-3xl font-extrabold text-sky-600 mt-2">{stats.totalStudents}</p>
-        </div>
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        <div className="bg-white p-6 rounded-xl shadow border">
-          <h3 className="font-bold text-lg mb-4 text-slate-800">Complaint Status Breakdown</h3>
-          <div className="h-64 flex justify-center">
-            <Pie data={pieData} />
-          </div>
-        </div>
-
-        <div className="bg-white p-6 rounded-xl shadow border">
-          <h3 className="font-bold text-lg mb-4 text-slate-800">System Activity Metrics</h3>
-          <div className="h-64 flex justify-center">
-            <Bar data={barData} />
-          </div>
+        <div className="bg-white p-4 rounded-xl shadow border">
+          <p className="text-xs text-green-600">Resolved</p>
+          <p className="text-2xl font-bold">{stats.resolvedComplaints}</p>
         </div>
       </div>
     </div>
