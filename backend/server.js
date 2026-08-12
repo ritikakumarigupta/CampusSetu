@@ -6,8 +6,13 @@ require('dotenv').config();
 
 const app = express();
 
-// Middleware
-app.use(cors());
+// CORS Middleware configuration to allow Vercel and local requests
+app.use(cors({
+  origin: '*', // Or specify your frontend Vercel URL
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  credentials: true
+}));
+
 app.use(express.json());
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
@@ -25,7 +30,12 @@ app.get('/', (req, res) => {
 
 // Database Connection & Server Init
 const PORT = process.env.PORT || 5000;
-const MONGO_URI = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/campussetu';
+const MONGO_URI = process.env.MONGO_URI;
+
+if (!MONGO_URI) {
+  console.error('FATAL ERROR: MONGO_URI environment variable is not defined.');
+  process.exit(1);
+}
 
 mongoose.connect(MONGO_URI)
   .then(() => {

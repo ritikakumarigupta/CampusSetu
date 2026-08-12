@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const API = axios.create({
-  baseURL: 'https://campussetu-fk70.onrender.com', 
+  baseURL: 'https://campussetu-fk70.onrender.com',
 });
 
 API.interceptors.request.use((config) => {
@@ -10,6 +10,8 @@ API.interceptors.request.use((config) => {
     config.headers.Authorization = `Bearer ${token}`;
   }
   return config;
+}, (error) => {
+  return Promise.reject(error);
 });
 
 export default API;
