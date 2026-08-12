@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/CampusSetu/static/css/main.3cd5f1a4.css",
+    "main.js": "/CampusSetu/static/js/main.c318c2a9.js",
+    "index.html": "/CampusSetu/index.html",
+    "main.3cd5f1a4.css.map": "/CampusSetu/static/css/main.3cd5f1a4.css.map",
+    "main.c318c2a9.js.map": "/CampusSetu/static/js/main.c318c2a9.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.3cd5f1a4.css",
+    "static/js/main.c318c2a9.js"
+  ]
+}
