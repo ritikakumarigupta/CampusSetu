@@ -15,7 +15,6 @@ router.get('/overview', async (req, res) => {
       pendingComplaints
     });
   } catch (err) {
-    console.error('Admin Overview Error:', err);
     res.status(500).json({ message: 'Server Error: ' + err.message });
   }
 });

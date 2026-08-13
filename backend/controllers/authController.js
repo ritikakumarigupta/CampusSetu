@@ -4,63 +4,61 @@ const jwt = require('jsonwebtoken');
 
 exports.register = async (req, res) => {
   try {
-    const { name, email, password, role, rollNo } = req.body;
-
-    // 1. Email ko lowercase aur trim karein taaki spacing/capitalization error na aaye
-    const cleanEmail = email ? email.toLowerCase().trim() : '';
-
-    // 2. Query dynamic banayein taaki khali Roll No par duplicate error na bane
-    const queryConditions = [{ email: cleanEmail }];
-    if (rollNo && rollNo.trim() !== '') {
-      queryConditions.push({ rollNo: rollNo.trim() });
+    const { name, email, password, role } = req.body;
+    if (!name || !email || !password) {
+      return res.status(400).json({ message: 'All fields are required' });
     }
-
-    const existingUser = await User.findOne({ $or: queryConditions });
-    if (existingUser) {
-      return res.status(400).json({ message: 'User with this email or Roll/ID already exists.' });
+    let user = await User.findOne({ email: email.toLowerCase().trim() });
+    if (user) {
+      return res.status(400).json({ message: 'User already exists' });
     }
-
-    const hashedPassword = await bcrypt.hash(password, 10);
-    const user = new User({ 
-      name, 
-      email: cleanEmail, 
-      password: hashedPassword, 
-      role: role || 'Student', 
-      rollNo: rollNo ? rollNo.trim() : 'N/A' 
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
+    user = new User({
+      name,
+      email: email.toLowerCase().trim(),
+      password: hashedPassword,
+      role: role || 'Student'
     });
-
     await user.save();
-
-    res.status(201).json({ message: 'Registration successful! Please login.' });
+    const token = jwt.sign(
+      { id: user._id, role: user.role },
+      process.env.JWT_SECRET || 'secretkey',
+      { expiresIn: '7d' }
+    );
+    res.status(201).json({
+      token,
+      user: { id: user._id, name: user.name, email: user.email, role: user.role }
+    });
   } catch (err) {
-    res.status(500).json({ message: 'Server error during registration.', error: err.message });
+    res.status(500).json({ message: 'Server Error: ' + err.message });
   }
 };
 
 exports.login = async (req, res) => {
   try {
     const { email, password } = req.body;
-
-    // Login me bhi email lowercase karein
-    const cleanEmail = email ? email.toLowerCase().trim() : '';
-
-    const user = await User.findOne({ email: cleanEmail });
-    if (!user) return res.status(400).json({ message: 'Invalid credentials.' });
-
+    if (!email || !password) {
+      return res.status(400).json({ message: 'Email and password are required' });
+    }
+    const user = await User.findOne({ email: email.toLowerCase().trim() });
+    if (!user) {
+      return res.status(400).json({ message: 'Invalid Credentials' });
+    }
     const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) return res.status(400).json({ message: 'Invalid credentials.' });
-
+    if (!isMatch) {
+      return res.status(400).json({ message: 'Invalid Credentials' });
+    }
     const token = jwt.sign(
-      { id: user._id, role: user.role, name: user.name },
-      process.env.JWT_SECRET || 'campussetu_super_secret_jwt_key_2026',
-      { expiresIn: '1d' }
+      { id: user._id, role: user.role },
+      process.env.JWT_SECRET || 'secretkey',
+      { expiresIn: '7d' }
     );
-
-    res.status(200).json({
+    res.json({
       token,
-      user: { id: user._id, name: user.name, email: user.email, role: user.role, rollNo: user.rollNo }
+      user: { id: user._id, name: user.name, email: user.email, role: user.role }
     });
   } catch (err) {
-    res.status(500).json({ message: 'Server error during login.', error: err.message });
+    res.status(500).json({ message: 'Server Error: ' + err.message });
   }
 };

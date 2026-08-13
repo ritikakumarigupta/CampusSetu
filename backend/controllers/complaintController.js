@@ -2,30 +2,29 @@ const Complaint = require('../models/Complaint');
 
 exports.createComplaint = async (req, res) => {
   try {
-    const { category, title, description, location } = req.body;
-    const image = req.file ? `/uploads/${req.file.filename}` : '';
-
-    const complaint = new Complaint({
-      userId: req.user.id,
-      category,
+    const { title, category, description } = req.body;
+    if (!title || !category || !description) {
+      return res.status(400).json({ message: 'All fields are required' });
+    }
+    const newComplaint = new Complaint({
       title,
+      category,
       description,
-      location,
-      image
+      status: 'Pending',
+      createdAt: new Date()
     });
-
-    await complaint.save();
-    res.status(201).json({ message: 'Complaint submitted successfully!', complaint });
+    await newComplaint.save();
+    res.status(201).json({ message: 'Complaint raised successfully', complaint: newComplaint });
   } catch (err) {
-    res.status(500).json({ message: 'Failed to create complaint.', error: err.message });
+    res.status(500).json({ message: 'Server Error: ' + err.message });
   }
 };
 
-exports.getUserComplaints = async (req, res) => {
+exports.getComplaints = async (req, res) => {
   try {
-    const complaints = await Complaint.find({ userId: req.user.id }).sort({ createdAt: -1 });
-    res.status(200).json(complaints);
+    const complaints = await Complaint.find().sort({ createdAt: -1 });
+    res.json(complaints);
   } catch (err) {
-    res.status(500).json({ message: 'Error fetching user complaints.', error: err.message });
+    res.status(500).json({ message: 'Server Error: ' + err.message });
   }
 };

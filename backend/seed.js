@@ -1,72 +1,38 @@
 const mongoose = require('mongoose');
-const bcrypt = require('bcryptjs');
+const dotenv = require('dotenv');
 const User = require('./models/User');
-const Announcement = require('./models/Announcement');
-require('dotenv').config();
+const bcrypt = require('bcryptjs');
 
-const seedDB = async () => {
+dotenv.config();
+
+const seedAdmin = async () => {
   try {
-    await mongoose.connect(process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/campussetu');
-    console.log('Database Connected Successfully!');
+    await mongoose.connect(process.env.MONGO_URI);
+    console.log('MongoDB Connected for Seeding...');
 
-    // Existing Data Delete Karein
-    await User.deleteMany({});
-    await Announcement.deleteMany({});
-
-    // Agar Booking model exist karta hai toh use bhi delete karein
-    try {
-      // capital 'B' ya small 'b' dono try kar lega
-      const Booking = require('./models/Booking'); 
-      await Booking.deleteMany({});
-    } catch (e) {
-      try {
-        const Booking = require('./models/booking');
-        await Booking.deleteMany({});
-      } catch (err) {
-        console.log('Booking collection skipped (model not needed for basic seed)');
-      }
+    const adminExists = await User.findOne({ email: 'admin@campussetu.com' });
+    if (adminExists) {
+      console.log('Admin user already exists!');
+      process.exit();
     }
 
-    // Passwords Hash
-    const adminPass = await bcrypt.hash('admin123', 10);
-    const studentPass = await bcrypt.hash('123456', 10);
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash('admin123', salt);
 
-    // 1. Admin Account
-    const admin = await User.create({
-      name: 'Campus Administrator',
-      email: 'admin@campus.edu',
-      password: adminPass,
-      role: 'Admin',
-      rollNo: 'ADMIN01'
+    const adminUser = new User({
+      name: 'Campus Admin',
+      email: 'admin@campussetu.com',
+      password: hashedPassword,
+      role: 'Admin'
     });
 
-    // 2. Student Account
-    const student = await User.create({
-      name: 'Ritika Kumari',
-      email: 'ritikakumarigupta372@gmail.com',
-      password: studentPass,
-      role: 'Student',
-      rollNo: '2026CS101'
-    });
-
-    // 3. Sample Announcement
-    await Announcement.create({
-      title: 'Welcome to CampusSetu Portal',
-      description: 'CampusSetu portal is live for classroom & lab bookings.',
-      postedBy: admin._id
-    });
-
-    console.log('\n✅ Sample Data Seeded Successfully!');
-    console.log('------------------------------------');
-    console.log('🔑 Admin   : admin@campus.edu / admin123');
-    console.log('🔑 Student : ritikakumarigupta372@gmail.com / 123456');
-    console.log('------------------------------------\n');
-
+    await adminUser.save();
+    console.log('Default Admin Created Successfully! (Email: admin@campussetu.com, Password: admin123)');
     process.exit();
-  } catch (error) {
-    console.error('❌ Error Seeding Data:', error);
+  } catch (err) {
+    console.error('Seeding Error:', err);
     process.exit(1);
   }
 };
 
-seedDB();
+seedAdmin();

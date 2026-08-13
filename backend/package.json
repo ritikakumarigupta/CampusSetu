@@ -1,6 +1,7 @@
 {
   "name": "campussetu-backend",
   "version": "1.0.0",
+  "description": "Backend for CampusSetu Portal",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",

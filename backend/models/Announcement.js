@@ -1,9 +1,9 @@
 const mongoose = require('mongoose');
 
-const AnnouncementSchema = new mongoose.Schema({
+const announcementSchema = new mongoose.Schema({
   title: { type: String, required: true },
-  description: { type: String, required: true },
-  postedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true }
+  content: { type: String, required: true },
+  author: { type: String }
 }, { timestamps: true });
 
-module.exports = mongoose.model('Announcement', AnnouncementSchema);
+module.exports = mongoose.model('Announcement', announcementSchema);

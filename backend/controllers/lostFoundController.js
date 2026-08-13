@@ -1,42 +1,24 @@
 const LostFound = require('../models/LostFound');
 
-exports.getAllItems = async (req, res) => {
-  try {
-    const items = await LostFound.find().populate('postedBy', 'name email').sort({ createdAt: -1 });
-    res.status(200).json(items);
-  } catch (err) {
-    res.status(500).json({ message: 'Error fetching items.', error: err.message });
-  }
-};
-
 exports.createItem = async (req, res) => {
   try {
-    const { type, itemName, description, location, contact } = req.body;
-    const image = req.file ? `/uploads/${req.file.filename}` : '';
-
-    const newItem = new LostFound({
-      type,
-      itemName,
-      description,
-      location,
-      contact,
-      image,
-      postedBy: req.user.id
-    });
-
-    await newItem.save();
-    res.status(201).json({ message: 'Lost/Found item posted successfully!', item: newItem });
+    const { title, description, type, location } = req.body;
+    if (!title || !description || !type) {
+      return res.status(400).json({ message: 'All required fields must be filled' });
+    }
+    const item = new LostFound({ title, description, type, location });
+    await item.save();
+    res.status(201).json({ message: 'Item added successfully', item });
   } catch (err) {
-    res.status(500).json({ message: 'Error creating item post.', error: err.message });
+    res.status(500).json({ message: 'Server Error: ' + err.message });
   }
 };
 
-exports.updateItemStatus = async (req, res) => {
+exports.getItems = async (req, res) => {
   try {
-    const { status } = req.body;
-    const item = await LostFound.findByIdAndUpdate(req.params.id, { status }, { new: true });
-    res.status(200).json({ message: 'Status updated successfully.', item });
+    const items = await LostFound.find().sort({ createdAt: -1 });
+    res.json(items);
   } catch (err) {
-    res.status(500).json({ message: 'Error updating status.', error: err.message });
+    res.status(500).json({ message: 'Server Error: ' + err.message });
   }
 };
