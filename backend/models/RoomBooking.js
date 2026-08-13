@@ -8,4 +8,4 @@ const roomBookingSchema = new mongoose.Schema({
   status: { type: String, enum: ['Pending', 'Approved', 'Rejected'], default: 'Pending' }
 }, { timestamps: true });
 
-module.exports = mongoose.model('RoomBooking', roomBookingSchema);
+module.exports = mongoose.model('roomBooking', roomBookingSchema);
