@@ -35,12 +35,11 @@ const Register = () => {
   return (
     <div className="min-h-screen flex items-center justify-center bg-slate-100 px-4">
       <div className="max-w-md w-full bg-white border border-slate-200 rounded-2xl p-8 shadow-xl space-y-6">
-        
-        {/* Header (Logo & Subtitle Removed) */}
         <div className="text-center space-y-2">
           <h1 className="text-2xl font-extrabold text-slate-900">
             Create Account
           </h1>
+          <p className="text-xs text-slate-500">Sign up for CampusSetu</p>
         </div>
 
         {error && (
@@ -67,7 +66,7 @@ const Register = () => {
             <input
               type="email"
               required
-              placeholder="name@gmail.com"
+              placeholder="student@gmail.com"
               value={formData.email}
               onChange={(e) => setFormData({ ...formData, email: e.target.value })}
               className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-sky-500"

@@ -37,37 +37,34 @@ const Login = () => {
   return (
     <div className="min-h-screen flex items-center justify-center bg-slate-100 px-4">
       <div className="max-w-md w-full bg-white border border-slate-200 rounded-2xl p-8 shadow-xl space-y-6">
-        
-        {/* Header (Logo & Subtitle Removed) */}
         <div className="text-center space-y-2">
-          <h1 className="text-2xl font-extrabold text-slate-900 dark:text-white">
+          <h1 className="text-2xl font-extrabold text-slate-900">
             CampusSetu Portal
           </h1>
+          <p className="text-xs text-slate-500">Sign in to your account</p>
         </div>
 
         {error && (
-          <div className="p-3 rounded-lg bg-red-500/10 border border-red-500/20 text-red-600 dark:text-red-400 text-xs text-center font-medium">
+          <div className="p-3 rounded-lg bg-red-500/10 border border-red-500/20 text-red-600 text-xs text-center font-medium">
             {error}
           </div>
         )}
 
         <form onSubmit={handleSubmit} className="space-y-4">
-          {/* Email Field */}
           <div>
-            <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+            <label className="block text-xs font-semibold text-slate-700 mb-1">
               Campus Email
             </label>
             <input
               type="email"
               required
-              placeholder="name@gmail.com"
+              placeholder="student@gmail.com"
               value={formData.email}
               onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-              className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-sky-500 text-sm transition"
+              className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-300 text-slate-900 focus:outline-none focus:ring-2 focus:ring-sky-500 text-sm"
             />
           </div>
 
-          {/* Password Field with Eye Icon Toggle */}
           <div>
             <label className="block text-xs font-semibold text-slate-700 mb-1">
               Password
@@ -79,23 +76,18 @@ const Login = () => {
                 placeholder="••••••••"
                 value={formData.password}
                 onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                className="w-full px-3.5 py-2.5 pr-10 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-sky-500 text-sm transition"
+                className="w-full px-3.5 py-2.5 pr-10 rounded-xl bg-slate-50 border border-slate-300 text-slate-900 focus:outline-none focus:ring-2 focus:ring-sky-500 text-sm"
               />
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 focus:outline-none"
+                className="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-600 focus:outline-none"
               >
-                {showPassword ? (
-                  <EyeOff className="w-4 h-4" />
-                ) : (
-                  <Eye className="w-4 h-4" />
-                )}
+                {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
               </button>
             </div>
           </div>
 
-          {/* Submit Button */}
           <button
             type="submit"
             disabled={loading}
@@ -105,10 +97,9 @@ const Login = () => {
           </button>
         </form>
 
-        {/* Footer Link */}
-        <p className="text-xs text-center text-slate-500 dark:text-slate-400 pt-2">
+        <p className="text-xs text-center text-slate-500 pt-2">
           Don't have an account?{' '}
-          <Link to="/register" className="text-sky-600 dark:text-sky-400 font-semibold hover:underline">
+          <Link to="/register" className="text-sky-600 font-semibold hover:underline">
             Register Here
           </Link>
         </p>
